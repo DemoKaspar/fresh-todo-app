@@ -2,4 +2,12 @@ shared:
   vm-fleet:
     type: vm-fleet
 
-workloads: {}
+workloads:
+  todo-frontend:
+    type: container
+    image: alpine:latest  # Placeholder - we're using VMs not containers
+    variables:
+      NODE_ENV: production
+      PORT: "3000"
+    dependencies:
+      - vm-fleet
