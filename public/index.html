@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App - Humanitec VM Platform</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .todo-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+        .todo-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .add-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .todo-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+        .todo-text {
+            flex: 1;
+        }
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .server-info {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Todo App</h1>
+        <p>Deployed on AWS VMs via Humanitec Platform</p>
+    </div>
+
+    <form class="todo-form" id="todoForm">
+        <input type="text" class="todo-input" id="todoInput" placeholder="Add a new todo..." required>
+        <button type="submit" class="add-btn">Add Todo</button>
+    </form>
+
+    <div id="todoList"></div>
+
+    <div class="server-info">
+        <strong>Server:</strong> <span id="serverInfo">Loading...</span><br>
+        <strong>Status:</strong> <span id="healthStatus">Checking...</span>
+    </div>
+
+    <script>
+        let todos = [];
+
+        async function loadTodos() {
+            try {
+                const response = await fetch('/api/todos');
+                todos = await response.json();
+                renderTodos();
+            } catch (error) {
+                console.error('Error loading todos:', error);
+            }
+        }
+
+        function renderTodos() {
+            const container = document.getElementById('todoList');
+            container.innerHTML = todos.map(todo => `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}">
+                    <input type="checkbox" ${todo.completed ? 'checked' : ''} 
+                           onchange="toggleTodo(${todo.id})">
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="delete-btn" onclick="deleteTodo(${todo.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('todoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                await fetch('/api/todos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+                input.value = '';
+                loadTodos();
+            } catch (error) {
+                console.error('Error adding todo:', error);
+            }
+        });
+
+        async function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (!todo) return;
+            
+            try {
+                await fetch(`/api/todos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ completed: !todo.completed })
+                });
+                loadTodos();
+            } catch (error) {
+                console.error('Error updating todo:', error);
+            }
+        }
+
+        async function deleteTodo(id) {
+            try {
+                await fetch(`/api/todos/${id}`, { method: 'DELETE' });
+                loadTodos();
+            } catch (error) {
+                console.error('Error deleting todo:', error);
+            }
+        }
+
+        async function loadServerInfo() {
+            try {
+                const response = await fetch('/health');
+                const health = await response.json();
+                document.getElementById('serverInfo').textContent = health.server;
+                document.getElementById('healthStatus').textContent = health.status;
+            } catch (error) {
+                document.getElementById('healthStatus').textContent = 'Error';
+            }
+        }
+
+        loadTodos();
+        loadServerInfo();
+        setInterval(loadServerInfo, 30000);
+    </script>
+</body>
+</html>
