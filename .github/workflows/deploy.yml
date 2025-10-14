@@ -7,7 +7,7 @@ on:
 
 env:
   HUMANITEC_ORG: unveiled-lunchroom-defame-ki2k
-  PROJECT_ID: humanitec-11wcie-vm-project
+  PROJECT_ID: fresh-todo-app-project
   ENVIRONMENT_ID: dev
 
 jobs:
@@ -36,6 +36,18 @@ jobs:
         tar -xzf hctl_linux_amd64.tar.gz
         sudo install -o root -g root -m 0755 hctl /usr/local/bin/hctl
         hctl --version
+
+    - name: Setup Humanitec Infrastructure
+      env:
+        HUMANITEC_AUTH_TOKEN: ${{ secrets.HUMANITEC_TOKEN }}
+      run: |
+        echo "Setting up Humanitec infrastructure..."
+        
+        # Create project if it doesn't exist
+        hctl create project $PROJECT_ID || echo "Project may already exist"
+        
+        # Create environment if it doesn't exist  
+        hctl create environment $PROJECT_ID $ENVIRONMENT_ID --set env_type_id=humanitec-11wcie-development || echo "Environment may already exist"
 
     - name: Deploy to Humanitec
       env:
