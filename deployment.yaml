@@ -2,9 +2,4 @@ shared:
   vm-fleet:
     type: vm-fleet
 
-workloads:
-  todo-frontend:
-    image: nginx:alpine  # Placeholder image - actual app runs on VMs
-    variables:
-      NODE_ENV: production
-      PORT: "3000"
+workloads: {}
