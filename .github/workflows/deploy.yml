@@ -59,7 +59,7 @@ jobs:
         echo "Environment: $ENVIRONMENT_ID"
         
         # Deploy and capture outputs
-        hctl deploy $PROJECT_ID $ENVIRONMENT_ID deployment.yaml --no-prompt --runner-logs-level debug --output - > deployment_outputs.json
+        hctl deploy $PROJECT_ID $ENVIRONMENT_ID deployment.yaml --no-prompt --runner-logs-level debug --result - > deployment_outputs.json
         
         # Try to extract load balancer URL from outputs
         if [ -s deployment_outputs.json ]; then
