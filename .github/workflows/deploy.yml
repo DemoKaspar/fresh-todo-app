@@ -58,26 +58,12 @@ jobs:
         echo "Project: $PROJECT_ID"
         echo "Environment: $ENVIRONMENT_ID"
         
-        # Deploy and capture outputs
-        hctl deploy $PROJECT_ID $ENVIRONMENT_ID deployment.yaml --no-prompt --runner-logs-level debug --result - > deployment_outputs.json
+        # Deploy
+        hctl deploy $PROJECT_ID $ENVIRONMENT_ID deployment.yaml --no-prompt --runner-logs-level debug
         
-        # Try to extract load balancer URL from outputs
-        if [ -s deployment_outputs.json ]; then
-          echo "=== Deployment Outputs ==="
-          cat deployment_outputs.json | jq '.' || cat deployment_outputs.json
-          
-          # Look for load balancer URL in outputs
-          LOADBALANCER_URL=$(cat deployment_outputs.json | jq -r '.shared."vm-fleet".loadbalancer_ip // .shared."vm-fleet".outputs.loadbalancer_ip // empty' 2>/dev/null || echo "")
-          
-          if [ -n "$LOADBALANCER_URL" ] && [ "$LOADBALANCER_URL" != "null" ]; then
-            echo ""
-            echo "🚀 TODO APP DEPLOYED SUCCESSFULLY!"
-            echo "📱 Access your app at: http://$LOADBALANCER_URL"
-            echo "🔗 Load Balancer URL: $LOADBALANCER_URL"
-            echo ""
-          else
-            echo "⚠️  Deployment succeeded but load balancer URL not found in outputs"
-          fi
-        else
-          echo "⚠️  No deployment outputs captured"
-        fi
+        echo ""
+        echo "🚀 TODO APP DEPLOYED SUCCESSFULLY!"
+        echo "🔗 Find your load balancer at: https://console.aws.amazon.com/ec2/v2/home#LoadBalancers:"
+        echo "🔍 Look for load balancer with name containing 'vm-todo'"
+        echo "📱 The todo app runs on port 80 of the load balancer"
+        echo ""
