@@ -4,13 +4,3 @@ shared:
 
 workloads:
   todo-app:
-    image: ghcr.io/demokaspar/fresh-todo-app:latest
-    variables:
-      NODE_ENV: production
-      PORT: "3000"
-    service:
-      name: todo-app
-      port: 80
-      target_port: 3000
-    dependencies:
-      - vm-fleet

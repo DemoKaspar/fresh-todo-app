@@ -30,22 +30,22 @@ jobs:
     - name: Run tests
       run: npm test
 
-    - name: Build and push container image
-      run: |
-        echo "Building container image for todo app..."
-        
-        # Login to GitHub Container Registry
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        
-        # Build image
-        docker build -t ghcr.io/demokaspar/fresh-todo-app:${{ github.sha }} .
-        docker tag ghcr.io/demokaspar/fresh-todo-app:${{ github.sha }} ghcr.io/demokaspar/fresh-todo-app:latest
-        
-        # Push image
-        docker push ghcr.io/demokaspar/fresh-todo-app:${{ github.sha }}
-        docker push ghcr.io/demokaspar/fresh-todo-app:latest
-        
-        echo "Container image pushed: ghcr.io/demokaspar/fresh-todo-app:latest"
+    # - name: Build and push container image (TODO: Fix GHCR permissions)
+    #   run: |
+    #     echo "Building container image for todo app..."
+    #     
+    #     # Login to GitHub Container Registry
+    #     echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    #     
+    #     # Build image
+    #     docker build -t ghcr.io/demokaspar/fresh-todo-app:${{ github.sha }} .
+    #     docker tag ghcr.io/demokaspar/fresh-todo-app:${{ github.sha }} ghcr.io/demokaspar/fresh-todo-app:latest
+    #     
+    #     # Push image
+    #     docker push ghcr.io/demokaspar/fresh-todo-app:${{ github.sha }}
+    #     docker push ghcr.io/demokaspar/fresh-todo-app:latest
+    #     
+    #     echo "Container image pushed: ghcr.io/demokaspar/fresh-todo-app:latest"
 
     - name: Install Humanitec CLI
       run: |
