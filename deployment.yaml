@@ -6,4 +6,3 @@ workloads:
   todo-app:
     variables:
       LOAD_BALANCER_URL: "http://${shared.vm-fleet.outputs.loadbalancer_ip}"
-      NODE_ENV: "${humanitec.env_id}"
