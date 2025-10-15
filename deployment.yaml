@@ -4,3 +4,6 @@ shared:
 
 workloads:
   todo-app:
+    resources:
+      todo-workload:
+        type: workload
