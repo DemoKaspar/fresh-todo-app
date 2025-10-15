@@ -1,0 +1,6 @@
+shared:
+  vm-fleet:
+    type: vm-fleet
+
+workloads:
+  todo-app:
