@@ -7,7 +7,7 @@ on:
 
 env:
   HUMANITEC_ORG: unveiled-lunchroom-defame-ki2k
-  PROJECT_ID: fresh-todo-app-project
+  PROJECT_ID: fresh-todo-app-project-clean
   ENVIRONMENT_ID: dev
 
 jobs:
