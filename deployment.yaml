@@ -1,8 +1,0 @@
-shared:
-  vm-fleet:
-    type: vm-fleet
-
-workloads:
-  todo-app:
-    variables:
-      LOAD_BALANCER_URL: "http://${shared.vm-fleet.outputs.loadbalancer_ip}"
