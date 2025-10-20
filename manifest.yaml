@@ -3,6 +3,8 @@ shared:
     type: vm-fleet
   database:
     type: postgres
+  bucket:
+    type: s3
 
 workloads:
   fresh-todo-app:
