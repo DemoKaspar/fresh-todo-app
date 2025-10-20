@@ -79,7 +79,7 @@ jobs:
         echo "Environment: $ENVIRONMENT_ID"
         
         # Deploy
-        hctl deploy $PROJECT_ID $ENVIRONMENT_ID deployment.yaml --no-prompt --runner-logs-level debug
+        hctl deploy $PROJECT_ID $ENVIRONMENT_ID manifest.yaml --no-prompt --runner-logs-level debug
         
         echo ""
         echo "🚀 TODO APP DEPLOYED SUCCESSFULLY!"
