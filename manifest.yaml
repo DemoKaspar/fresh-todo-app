@@ -16,3 +16,6 @@ workloads:
       DB_USER: "${shared.database.outputs.username}"
       DB_PASSWORD: "${shared.database.outputs.password}"
       LOAD_BALANCER_URL: "http://${shared.compute.outputs.loadbalancer_ip}"
+      AWS_S3_BUCKET: "${shared.bucket.outputs.bucket_name}"
+      AWS_REGION: "${shared.bucket.outputs.region}"
+      S3_BUCKET_ARN: "${shared.bucket.outputs.bucket_arn}"
